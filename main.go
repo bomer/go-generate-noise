@@ -65,7 +65,7 @@ func main() {
 	numberOfFramesToGenerate := 1
 	for imageGenerated := 0; imageGenerated < numberOfFramesToGenerate; imageGenerated++ {
 		// fmt.Println(("out" + (imageGenerated) + ".png"))
-		stringval := fmt.Sprint("out", imageGenerated, ".png")
+		stringval := fmt.Sprint("data/out", imageGenerated, ".png")
 		outpng, err := os.Create(stringval)
 		if err != nil {
 			panic(err.Error())
