@@ -20,6 +20,8 @@ var (
 	imageWidth  int
 )
 
+//Function to load a file, was going to try combine all read images to gif
+//
 func ImageRead(ImageFile string) (image image.Image) {
 	// open "test.jpg"
 	file, err := os.Open(ImageFile)
@@ -42,30 +44,16 @@ func main() {
 	// singleImage := image.NewPaletted(image.Rect(0, 0, 100, 100),image.NewPaletted(r, p))
 	// outputGif := gif.GIF{}
 	black := color.RGBA{0, 0, 0, 255}
-
 	draw.Draw(m, m.Bounds(), &image.Uniform{black}, image.ZP, draw.Src)
-	// outpng, _ := os.Create("out.png")
-	// toimg, _ := os.Create("test.gif")
-	// defer toimg.Close()
+
 	w := m.Bounds().Max.X
 	h := m.Bounds().Max.Y
 	fmt.Println("w", w, "h", h)
-	// x := 0
-	// y := 0
-	// n := 500
-	// prev := color.RGBA{0, 0, 0, 0}
-	// for i := 0; i < n; i++ {
-	// 	x = rand.Intn(w)
-	// 	y = rand.Intn(h)
-	// 	prev = m.At(x, y).(color.RGBA)
-	// 	prev.R += 30
-	// 	m.Set(x, y, prev)
-	// }
-	// stringval := ""
-	numberOfFramesToGenerate := 1
+	os.Mkdir("output", 0700)
+	numberOfFramesToGenerate := 1000
 	for imageGenerated := 0; imageGenerated < numberOfFramesToGenerate; imageGenerated++ {
 		// fmt.Println(("out" + (imageGenerated) + ".png"))
-		stringval := fmt.Sprint("data/out", imageGenerated, ".png")
+		stringval := fmt.Sprint("output/out", imageGenerated, ".png")
 		outpng, err := os.Create(stringval)
 		if err != nil {
 			panic(err.Error())
@@ -87,14 +75,11 @@ func main() {
 				m.Set(x, y, pixel)
 
 			}
-
-			// outputGif.Image = append(outputGif.Image, ImageRead("out.png").image.Paletted)
+			// This doesnt work, cannot convert gif image type (paletted), from image.RGBA
+			// outputGif.Image = append(outputGif.Image, ImageRead("out.png"))
 		}
 		png.Encode(outpng, m)
 		outpng.Close()
-		//Add image to Gif we're going to output
-
 	}
-	// gif.EncodeAll(toimg, &outputGif)
 
 }
