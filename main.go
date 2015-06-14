@@ -12,18 +12,22 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"sync"
+
 	// "strconv"
 )
 
 var (
 	imageHeight int
 	imageWidth  int
+	wg          sync.WaitGroup
 )
 
 //Function to load a file, was going to try combine all read images to gif
 //
 func ImageRead(ImageFile string) (image image.Image) {
 	// open "test.jpg"
+
 	file, err := os.Open(ImageFile)
 	if err != nil {
 		log.Fatal(err)
@@ -39,13 +43,14 @@ func ImageRead(ImageFile string) (image image.Image) {
 	return img
 }
 func generateImage(w int, h int, imageGenerated int) {
+	defer wg.Done()
 	m := image.NewRGBA(image.Rect(0, 0, 100, 100))
 	black := color.RGBA{0, 0, 0, 255}
 	draw.Draw(m, m.Bounds(), &image.Uniform{black}, image.ZP, draw.Src)
 	stringval := fmt.Sprint("output/out", imageGenerated, ".png")
-	fmt.Printf("printing ")
-	fmt.Printf(stringval)
-	fmt.Printf("\n")
+	// fmt.Printf("printing ")
+	// fmt.Printf(stringval)
+	// fmt.Printf("\n")
 	outpng, err := os.Create(stringval)
 	if err != nil {
 		panic(err.Error())
@@ -75,21 +80,13 @@ func generateImage(w int, h int, imageGenerated int) {
 }
 
 func main() {
-	m := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	// singleImage := image.NewPaletted(image.Rect(0, 0, 100, 100),image.NewPaletted(r, p))
-	// outputGif := gif.GIF{}
-	black := color.RGBA{0, 0, 0, 255}
-	draw.Draw(m, m.Bounds(), &image.Uniform{black}, image.ZP, draw.Src)
-
-	w := m.Bounds().Max.X
-	h := m.Bounds().Max.Y
-	fmt.Println("w", w, "h", h)
 	os.Mkdir("output", 0700)
-	numberOfFramesToGenerate := 20
+	numberOfFramesToGenerate := 1000
 	for imageGenerated := 0; imageGenerated < numberOfFramesToGenerate; imageGenerated++ {
 		// fmt.Println(("out" + (imageGenerated) + ".png"))
-		go generateImage(w, h, imageGenerated)
-
+		wg.Add(1)
+		go generateImage(100, 100, imageGenerated)
 	}
+	wg.Wait()
 
 }
