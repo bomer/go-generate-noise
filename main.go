@@ -56,6 +56,7 @@ func generateImage(w int, h int, imageGenerated int) {
 	if err != nil {
 		panic(err.Error())
 	}
+	defer outpng.Close()
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
 			pixel := m.At(x, y).(color.RGBA)
@@ -77,7 +78,7 @@ func generateImage(w int, h int, imageGenerated int) {
 		// outputGif.Image = append(outputGif.Image, ImageRead("out.png"))
 	}
 	png.Encode(outpng, m)
-	outpng.Close()
+
 }
 
 func main() {
