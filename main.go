@@ -12,6 +12,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"runtime"
 	"sync"
 
 	// "strconv"
@@ -81,6 +82,8 @@ func generateImage(w int, h int, imageGenerated int) {
 
 func main() {
 	os.Mkdir("output", 0700)
+	runtime.GOMAXPROCS(2)
+
 	numberOfFramesToGenerate := 1000
 	for imageGenerated := 0; imageGenerated < numberOfFramesToGenerate; imageGenerated++ {
 		// fmt.Println(("out" + (imageGenerated) + ".png"))
